@@ -6,10 +6,8 @@ import io
 import os
 from typing import List, Dict, Any
 
-# Configuration
 API_BASE_URL = "http://localhost:8000"
 
-# Page configuration
 st.set_page_config(
     page_title="Video Frame Processor",
     page_icon="🎥",
@@ -17,7 +15,6 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS
 st.markdown("""
 <style>
 .main-header {
@@ -51,7 +48,6 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 def check_api_status():
-    """Check if FastAPI server is running"""
     try:
         response = requests.get(f"{API_BASE_URL}/", timeout=5)
         return response.status_code == 200
@@ -59,7 +55,6 @@ def check_api_status():
         return False
 
 def upload_video(video_file, interval: int):
-    """Upload video to FastAPI backend"""
     try:
         files = {"file": (video_file.name, video_file.getvalue(), video_file.type)}
         params = {"interval": interval}
@@ -70,7 +65,6 @@ def upload_video(video_file, interval: int):
         return None
 
 def search_similar_frames(image_file, top_k: int):
-    """Search for similar frames"""
     try:
         files = {"file": (image_file.name, image_file.getvalue(), image_file.type)}
         params = {"top_k": top_k}
@@ -81,7 +75,6 @@ def search_similar_frames(image_file, top_k: int):
         return None
 
 def get_frame_image(frame_id: str):
-    """Get frame image from API"""
     try:
         response = requests.get(f"{API_BASE_URL}/frame/{frame_id}")
         if response.status_code == 200:
@@ -92,7 +85,6 @@ def get_frame_image(frame_id: str):
         return None
 
 def list_all_frames():
-    """Get list of all frames"""
     try:
         response = requests.get(f"{API_BASE_URL}/frames/list")
         return response.json() if response.status_code == 200 else None
@@ -101,7 +93,6 @@ def list_all_frames():
         return None
 
 def clear_all_data():
-    """Clear all frames and vectors"""
     try:
         response = requests.delete(f"{API_BASE_URL}/frames/clear")
         return response.status_code == 200
@@ -109,12 +100,9 @@ def clear_all_data():
         st.error(f"Error clearing data: {str(e)}")
         return False
 
-# Main UI
 def main():
-    # Header
     st.markdown('<h1 class="main-header">🎥 Video Frame Processor</h1>', unsafe_allow_html=True)
     
-    # Check API status
     if not check_api_status():
         st.markdown("""
         <div class="error-box">
@@ -125,7 +113,6 @@ def main():
         """, unsafe_allow_html=True)
         st.stop()
     
-    # Sidebar
     st.sidebar.title("Navigation")
     page = st.sidebar.selectbox(
         "Choose a page",
@@ -185,7 +172,7 @@ def upload_video_page():
                 if result:
                     st.markdown(f"""
                     <div class="success-box">
-                    ✅ <strong>Video processed successfully!</strong><br>
+                      <strong>Video processed successfully!</strong><br>
                     Video ID: {result.get('video_id', 'N/A')}<br>
                     Total frames extracted: {result.get('total_frames', 0)}<br>
                     </div>
@@ -204,7 +191,7 @@ def upload_video_page():
                     st.error("Failed to process video. Please try again.")
 
 def search_frames_page():
-    st.header("🔍 Search Similar Frames")
+    st.header("Search Similar Frames")
     
     st.markdown("""
     <div class="feature-box">
@@ -244,12 +231,12 @@ def search_frames_page():
             st.image(query_image, use_column_width=True)
         
         with col2:
-            if st.button("🔎 Search Similar Frames", type="primary"):
+            if st.button("Search Similar Frames", type="primary"):
                 with st.spinner("Searching for similar frames..."):
                     results = search_similar_frames(uploaded_image, top_k)
                     
                     if results and results.get('similar_frames'):
-                        st.subheader("🎯 Similar Frames Found")
+                        st.subheader("Similar Frames Found")
                         
                         for i, frame_result in enumerate(results['similar_frames']):
                             frame_id = frame_result['frame_id']
@@ -276,8 +263,7 @@ def browse_frames_page():
     
     if frames_data and frames_data.get('frames'):
         st.write(f"**Total frames stored:** {frames_data['total_frames']}")
-        
-        # Group frames by video
+
         videos = {}
         for frame in frames_data['frames']:
             video_name = frame['metadata'].get('original_video', 'Unknown')
@@ -302,20 +288,20 @@ def browse_frames_page():
         st.info("No frames stored yet. Upload some videos first!")
 
 def settings_page():
-    st.header("⚙️ Settings")
+    st.header("Settings")
     
     col1, col2 = st.columns(2)
     
     with col1:
-        st.subheader("🗃️ Database Management")
+        st.subheader("Database Management")
         
         frames_data = list_all_frames()
         if frames_data:
             st.metric("Total Frames", frames_data.get('total_frames', 0))
         
-        st.warning("⚠️ This action cannot be undone!")
+        st.warning("This action cannot be undone!")
         
-        if st.button("🗑️ Clear All Data", type="secondary"):
+        if st.button("Clear All Data", type="secondary"):
             if st.checkbox("I understand this will delete all data"):
                 with st.spinner("Clearing all data..."):
                     if clear_all_data():
@@ -325,16 +311,16 @@ def settings_page():
                         st.error("Failed to clear data.")
     
     with col2:
-        st.subheader("ℹ️ System Information")
+        st.subheader("System Information")
         
         if check_api_status():
-            st.success("✅ API Server: Running")
+            st.success("API Server: Running")
         else:
-            st.error("❌ API Server: Not responding")
+            st.error("API Server: Not responding")
         
         st.info(f"**API URL:** {API_BASE_URL}")
         
-        st.subheader("📋 Instructions")
+        st.subheader("Instructions")
         st.markdown("""
         1. **Start FastAPI server:**
            ```bash
