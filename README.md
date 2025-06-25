@@ -1,6 +1,7 @@
-🎥 Video Frame Processing Application
+Video Frame Processing Application
 A complete FastAPI + Streamlit application for extracting frames from videos, computing feature vectors, and performing similarity searches using free tier resources.
-🌟 Features
+
+Features
 
 Video Processing: Upload videos and extract frames at custom intervals
 Feature Extraction: Compute color histogram feature vectors for each frame
@@ -9,14 +10,15 @@ Web API: RESTful API with FastAPI
 User Interface: Interactive Streamlit web app
 Local Storage: No external dependencies - runs entirely locally
 
-📋 Requirements
+Requirements
 
 Python 3.8+
 2GB+ RAM recommended
 1GB+ free disk space
 Modern web browser
 
-🚀 Quick Start
+Quick Start
+
 Step 1: Clone/Download the Files
 Create a new directory and save all the provided files:
 bashmkdir video-frame-processor
@@ -48,7 +50,8 @@ Streamlit UI: http://localhost:8501
 FastAPI Docs: http://localhost:8000/docs
 API Root: http://localhost:8000
 
-📱 How to Use
+How to Use
+
 1. Upload Video
 
 Go to "Upload Video" page in Streamlit
