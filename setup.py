@@ -1,8 +1,4 @@
 #!/usr/bin/env python3
-"""
-Setup script for Video Frame Processing Application
-This script helps set up the environment and create necessary directories
-"""
 
 import os
 import sys
@@ -10,7 +6,6 @@ import subprocess
 import platform
 
 def create_directories():
-    """Create necessary directories"""
     directories = ['uploads', 'frames', 'logs']
     
     for directory in directories:
@@ -18,7 +13,6 @@ def create_directories():
         print(f"✅ Created directory: {directory}")
 
 def install_requirements():
-    """Install required packages"""
     print("📦 Installing required packages...")
     
     try:
@@ -30,7 +24,6 @@ def install_requirements():
     return True
 
 def check_python_version():
-    """Check if Python version is compatible"""
     version = sys.version_info
     if version.major < 3 or (version.major == 3 and version.minor < 8):
         print("❌ Python 3.8 or higher is required!")
@@ -40,7 +33,6 @@ def check_python_version():
     return True
 
 def create_env_file():
-    """Create environment configuration file"""
     env_content = """# Environment Configuration
 API_HOST=0.0.0.0
 API_PORT=8000
@@ -65,18 +57,14 @@ SUPPORTED_FORMATS=mp4,avi,mov,mkv
 def main():
     print("🚀 Setting up Video Frame Processing Application...")
     print("=" * 50)
-    
-    # Check Python version
+
     if not check_python_version():
         sys.exit(1)
-    
-    # Create directories
+
     create_directories()
-    
-    # Create environment file
+
     create_env_file()
     
-    # Install requirements
     if not install_requirements():
         sys.exit(1)
     
